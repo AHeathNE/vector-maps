@@ -1,0 +1,27 @@
+{
+  "name": "Blueprint",
+  "description": "White lines and text on blueprint blue — the flat counterpart of the 3D blueprint skin.",
+  "kind": "2d",
+  "css": {
+    "bg": "#154c87",
+    "surface": "#0f3a6b",
+    "surface2": "#1a5496",
+    "border": "rgba(255, 255, 255, 0.45)",
+    "text": "#ffffff",
+    "textDim": "#bcd6f2",
+    "accent": "#ffffff",
+    "accent2": "#ffd479",
+    "quadrantIrreverentHigh": "rgba(255, 255, 255, 0.04)",
+    "quadrantReverentHigh": "rgba(255, 255, 255, 0.04)",
+    "quadrantIrreverentLow": "rgba(255, 255, 255, 0.04)",
+    "quadrantReverentLow": "rgba(255, 255, 255, 0.04)"
+  },
+  "lines": {
+    "color": "#ffffff",
+    "thickness": 3
+  },
+  "nodes": {
+    "size": 12,
+    "thumbSize": 40
+  }
+}

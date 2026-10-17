@@ -1,0 +1,34 @@
+{
+  "name": "Sketchy",
+  "description": "Notebook yellow background, black flat lines and labels, nodes filled with their color and outlined in black like a doodle. Set nodes.useImages to true to show each node's thumbnail (when it has one) instead of a flat color fill.",
+  "kind": "3d",
+  "css": {
+    "bg": "#fbf0a8",
+    "surface": "rgba(255, 250, 222, 0.95)",
+    "border": "#1a1a1a",
+    "text": "#1a1a1a",
+    "textDim": "#4a4736",
+    "accent": "#1a1a1a",
+    "headerShadow": "none",
+    "tooltipGlow": "0 2px 8px rgba(0, 0, 0, 0.25)",
+    "panelGlow": "0 4px 20px rgba(0, 0, 0, 0.25)"
+  },
+  "lines": {
+    "style": "flat",
+    "color": "#1a1a1a"
+  },
+  "labels": {
+    "color": "#1a1a1a",
+    "glow": false
+  },
+  "nodes": {
+    "style": "flat",
+    "fill": "solid-outline",
+    "colorMode": "region",
+    "saturation": 0.75,
+    "lightness": 0.55,
+    "outlineColor": "#1a1a1a",
+    "useImages": false,
+    "pixelRadius": 10
+  }
+}

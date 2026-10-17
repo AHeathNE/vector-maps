@@ -1,0 +1,9 @@
+{
+  "type": "timeline",
+  "title": "Timeline",
+  "subtitle": "Hover a point for a preview, click for details. Move along the line to tilt it.",
+  "dateScheme": "year",
+  "nodeShape": "circle",
+  "skin": "default",
+  "skin2d": "default-2d"
+}

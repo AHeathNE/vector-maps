@@ -1,0 +1,176 @@
+{
+  "maps": [
+    {
+      "id": "1-axis-timeline",
+      "label": "Timeline · 1 axis",
+      "path": "../demos/1-axis-timeline/",
+      "pages": [
+        {
+          "file": "flat.html",
+          "skinnable": true,
+          "label": "2D · flat.html"
+        },
+        {
+          "file": "index.html",
+          "skinnable": true,
+          "label": "3D · index.html"
+        }
+      ],
+      "skins": [
+        {
+          "file": "default-2d",
+          "name": "Default (2D)",
+          "description": "The original flat look — leaves background/surface/text colors unset so the page's own light/dark theme (prefers-color-scheme) keeps working untouched.",
+          "kind": "2d"
+        },
+        {
+          "file": "default",
+          "name": "Default",
+          "description": "The original look: dark blue-black background, glossy chrome rod, glowing labels, nodes colored by category.",
+          "kind": "3d"
+        }
+      ],
+      "activeSkins": {
+        "skin": "default",
+        "skin2d": "default-2d"
+      }
+    },
+    {
+      "id": "2-axis-scatter",
+      "label": "Scatter · 2 axes",
+      "path": "../demos/2-axis-scatter/",
+      "pages": [
+        {
+          "file": "flat.html",
+          "skinnable": true,
+          "label": "2D · flat.html"
+        },
+        {
+          "file": "index.html",
+          "skinnable": true,
+          "label": "3D · index.html"
+        }
+      ],
+      "skins": [
+        {
+          "file": "default-2d",
+          "name": "Default",
+          "description": "The original look — leaves background/surface/text colors unset so the page's own light/dark theme (prefers-color-scheme) keeps working untouched.",
+          "kind": "2d"
+        },
+        {
+          "file": "default",
+          "name": "Default",
+          "description": "The original look: dark blue-black background, glossy chrome axes, glowing labels, four faintly tinted quadrants, nodes colored by category.",
+          "kind": "3d"
+        }
+      ],
+      "activeSkins": {
+        "skin": "default",
+        "skin2d": "default-2d"
+      }
+    },
+    {
+      "id": "3-axis-map",
+      "label": "Map · 3 axes",
+      "path": "../demos/3-axis-map/",
+      "pages": [
+        {
+          "file": "index.html",
+          "skinnable": true,
+          "label": "3D · index.html"
+        }
+      ],
+      "skins": [
+        {
+          "file": "blueprint",
+          "name": "Blueprint",
+          "description": "Technical-drawing blue: white flat lines and labels on a blueprint-blue background. Nodes are white outlines only — no fill color — trying this out, not final.",
+          "kind": "3d"
+        },
+        {
+          "file": "default",
+          "name": "Default",
+          "description": "Dark sci-fi chrome: glossy axes, glowing labels, soft blue glow on panels.",
+          "kind": "3d"
+        },
+        {
+          "file": "hand-drawn",
+          "name": "Hand Drawn",
+          "description": "A sketchy, hand-drawn look: wobbly axis lines and jittery hand-drawn circles in dark grey, on a cool white background.",
+          "kind": "3d"
+        },
+        {
+          "file": "paper",
+          "name": "Paper",
+          "description": "Flat black lines on an off-white background; bold, unlit flat colors on the data points.",
+          "kind": "3d"
+        },
+        {
+          "file": "sketchy",
+          "name": "Sketchy",
+          "description": "Notebook yellow background, black flat lines and labels, nodes filled with their color and outlined in black like a doodle. Set nodes.useImages to true to show each node's thumbnail (when it has one) instead of a flat color fill.",
+          "kind": "3d"
+        }
+      ],
+      "activeSkins": {
+        "skin": "default",
+        "skin2d": "default"
+      }
+    }
+  ],
+  "library": {
+    "3d": [
+      {
+        "file": "blueprint",
+        "name": "Blueprint",
+        "description": "Technical-drawing blue: white flat lines and labels on a blueprint-blue background. Nodes are white outlines only — no fill color — trying this out, not final.",
+        "kind": "3d"
+      },
+      {
+        "file": "default",
+        "name": "Default",
+        "description": "Dark sci-fi chrome: glossy axes, glowing labels, soft blue glow on panels.",
+        "kind": "3d"
+      },
+      {
+        "file": "hand-drawn",
+        "name": "Hand Drawn",
+        "description": "A sketchy, hand-drawn look: wobbly axis lines and jittery hand-drawn circles in dark grey, on a cool white background.",
+        "kind": "3d"
+      },
+      {
+        "file": "paper",
+        "name": "Paper",
+        "description": "Flat black lines on an off-white background; bold, unlit flat colors on the data points.",
+        "kind": "3d"
+      },
+      {
+        "file": "sketchy",
+        "name": "Sketchy",
+        "description": "Notebook yellow background, black flat lines and labels, nodes filled with their color and outlined in black like a doodle. Set nodes.useImages to true to show each node's thumbnail (when it has one) instead of a flat color fill.",
+        "kind": "3d"
+      }
+    ],
+    "2d": [
+      {
+        "file": "blueprint-2d",
+        "name": "Blueprint",
+        "description": "White lines and text on blueprint blue — the flat counterpart of the 3D blueprint skin.",
+        "kind": "2d"
+      },
+      {
+        "file": "default-2d",
+        "name": "Default",
+        "description": "The original look — leaves background/surface/text colors unset so the page's own light/dark theme (prefers-color-scheme) keeps working untouched.",
+        "kind": "2d"
+      },
+      {
+        "file": "sketchy-2d",
+        "name": "Sketchy",
+        "description": "Notebook-yellow page with black lines and text — the flat counterpart of the 3D sketchy skin.",
+        "kind": "2d"
+      }
+    ]
+  }
+}

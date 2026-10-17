@@ -1,0 +1,16 @@
+{
+  "name": "Default (2D)",
+  "description": "The original flat look — leaves background/surface/text colors unset so the page's own light/dark theme (prefers-color-scheme) keeps working untouched.",
+  "kind": "2d",
+  "css": {
+    "accent": "#7dd3fc",
+    "accent2": "#f0abfc"
+  },
+  "lines": {
+    "thickness": 3
+  },
+  "nodes": {
+    "size": 14,
+    "thumbSize": 40
+  }
+}

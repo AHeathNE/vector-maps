@@ -1,0 +1,27 @@
+{
+  "name": "Sketchy",
+  "description": "Notebook-yellow page with black lines and text — the flat counterpart of the 3D sketchy skin.",
+  "kind": "2d",
+  "css": {
+    "bg": "#fbf0a8",
+    "surface": "#fffadc",
+    "surface2": "#f3e68a",
+    "border": "#1a1a1a",
+    "text": "#1a1a1a",
+    "textDim": "#4a4736",
+    "accent": "#1a1a1a",
+    "accent2": "#1a1a1a",
+    "quadrantIrreverentHigh": "rgba(26, 26, 26, 0.04)",
+    "quadrantReverentHigh": "rgba(26, 26, 26, 0.04)",
+    "quadrantIrreverentLow": "rgba(26, 26, 26, 0.04)",
+    "quadrantReverentLow": "rgba(26, 26, 26, 0.04)"
+  },
+  "lines": {
+    "color": "#1a1a1a",
+    "thickness": 4
+  },
+  "nodes": {
+    "size": 16,
+    "thumbSize": 44
+  }
+}

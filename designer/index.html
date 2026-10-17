@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Designer</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="designer">
+  <aside class="designer__sidebar">
+    <h1 class="designer__heading">Designer</h1>
+    <p class="designer__hint server-only">
+      One designer for every map. Open a map folder, shape its skin with a live
+      preview, and save it straight into that folder's own
+      <code>skins/</code> — the map keeps working on its own. The library is a
+      shelf of skins you can pull from or add to.
+    </p>
+    <p class="designer__hint static-only">
+      One designer for every map. Pick a demo map and page, shape its skin with
+      a live preview, and download the result as JSON. The library is a shelf of
+      skins you can start from.
+    </p>
+
+    <section class="designer__section">
+      <div class="server-only">
+        <label class="designer__label" for="targetPath">Map folder</label>
+        <div class="designer__inline">
+          <input id="targetPath" type="text" spellcheck="false" placeholder="/path/to/your/map" />
+          <button type="button" id="targetOpen" class="designer__btn designer__btn--small">Open</button>
+        </div>
+        <select id="targetRecent" aria-label="Recent folders" hidden></select>
+      </div>
+      <div class="static-only">
+        <label class="designer__label" for="mapPick">Demo map</label>
+        <select id="mapPick"></select>
+      </div>
+      <label class="designer__label" for="targetPage">Page</label>
+      <select id="targetPage"></select>
+      <p class="designer__status" id="targetStatus"></p>
+    </section>
+
+    <p class="designer__notice static-only">
+      You're using the hosted demo: edit any skin and watch the map update
+      live, then <strong>Download JSON</strong>. Saving into your own map
+      folders needs the designer running locally — see the
+      <a href="https://github.com/AHeathNE/vector-maps#run-it-locally" target="_blank" rel="noopener">README</a>.
+    </p>
+
+    <div id="designerBody" hidden>
+      <section class="designer__section">
+        <label class="designer__label" for="preset">Start from</label>
+        <select id="preset"></select>
+      </section>
+
+      <section class="designer__section">
+        <label class="designer__label" for="name">Skin name</label>
+        <input id="name" type="text" />
+        <label class="designer__label" for="description">Description</label>
+        <textarea id="description" rows="2"></textarea>
+      </section>
+
+      <div id="formRoot"></div>
+
+      <section class="designer__section">
+        <h2 class="designer__subheading">Save</h2>
+        <label class="designer__label" for="filename">File name</label>
+        <input id="filename" type="text" spellcheck="false" />
+        <p class="designer__status" id="filenameHint"></p>
+        <label class="designer__check server-only"><input id="activate" type="checkbox" checked /> Make it the map's active skin</label>
+        <button type="button" id="saveApp" class="designer__btn server-only">Save to this map</button>
+        <button type="button" id="saveLibrary" class="designer__btn designer__btn--ghost server-only">Add to the library</button>
+        <button type="button" id="download" class="designer__btn designer__btn--ghost">Download JSON</button>
+        <button type="button" id="toggleJson" class="designer__btn designer__btn--ghost">Show raw JSON</button>
+        <pre id="jsonPreview" class="designer__json" hidden></pre>
+      </section>
+    </div>
+  </aside>
+
+  <main class="designer__preview">
+    <iframe id="preview" title="Live skin preview"></iframe>
+    <div id="previewMessage" class="designer__empty">Enter the path to a map folder to begin.</div>
+  </main>
+</div>
+
+<div id="toast" class="designer__toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Timeline</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="scene" aria-label="3D timeline"></canvas>
+
+<header class="header">
+  <h1 class="header__title" id="title">Timeline</h1>
+  <p class="header__subtitle" id="subtitle"></p>
+</header>
+
+<button class="image-toggle" id="imageToggleBtn" hidden>Show Photos</button>
+
+<div class="legend" id="legend" hidden></div>
+
+<div class="tooltip" id="tooltip" hidden>
+  <div class="tooltip__image" id="tooltipImage" hidden></div>
+  <div class="tooltip__date" id="tooltipDate"></div>
+  <div class="tooltip__title" id="tooltipTitle"></div>
+</div>
+
+<aside class="panel" id="panel" hidden>
+  <button class="panel__close" id="panelClose" aria-label="Close">&times;</button>
+  <div class="panel__image-wrap" id="panelImageWrap" hidden>
+    <img class="panel__image" id="panelImage" alt="" />
+  </div>
+  <div class="panel__date" id="panelDate"></div>
+  <h2 class="panel__title" id="panelTitle"></h2>
+  <div class="panel__category" id="panelCategory" hidden>
+    <span class="panel__category-swatch" id="panelCategorySwatch"></span>
+    <span id="panelCategoryName"></span>
+  </div>
+  <div class="panel__tags" id="panelTags"></div>
+  <p class="panel__description" id="panelDescription"></p>
+  <a class="panel__link" id="panelLink" href="#" target="_blank" rel="noopener">View project &rarr;</a>
+</aside>
+
+<p class="error" id="error" hidden></p>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>

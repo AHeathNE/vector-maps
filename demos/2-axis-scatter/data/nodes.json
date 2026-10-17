@@ -1,0 +1,146 @@
+[
+  {
+    "id": "n1",
+    "title": "Chapel Hymnal Redesign",
+    "x": 0.7,
+    "y": 0.6,
+    "z": 0.75,
+    "image": "",
+    "category": "print",
+    "description": "A faithful, polished reinterpretation of the traditional hymnal \u2014 high production value paired with deep respect for the source material and its liturgical context.",
+    "link": "",
+    "tags": [
+      "print",
+      "typography",
+      "sacred"
+    ]
+  },
+  {
+    "id": "n2",
+    "title": "Sunday School Zine",
+    "x": 0.4,
+    "y": -0.65,
+    "z": -0.55,
+    "image": "",
+    "category": "people",
+    "description": "A photocopied, hand-lettered zine for youth ministry \u2014 rough and playful in execution, but still sincere and respectful toward its subject matter.",
+    "link": "",
+    "tags": [
+      "zine",
+      "youth",
+      "handmade"
+    ]
+  },
+  {
+    "id": "n3",
+    "title": "Sermon Meme Series",
+    "x": -0.75,
+    "y": -0.55,
+    "z": -0.85,
+    "image": "",
+    "category": "digital",
+    "description": "Fast, scrappy social posts that poke fun at sermon cliches. Low production, high irreverence \u2014 made to be shared, not archived.",
+    "link": "",
+    "tags": [
+      "social",
+      "humor",
+      "digital"
+    ]
+  },
+  {
+    "id": "n4",
+    "title": "Deconstructed Communion Set",
+    "x": -0.6,
+    "y": 0.7,
+    "z": 0.6,
+    "image": "",
+    "category": "object",
+    "description": "A finely crafted, gallery-quality object that subverts expectations of communion ware \u2014 technically masterful, conceptually irreverent.",
+    "link": "",
+    "tags": [
+      "object",
+      "conceptual",
+      "craft"
+    ]
+  },
+  {
+    "id": "n5",
+    "title": "Prayer App Wireframes",
+    "x": 0.2,
+    "y": 0.15,
+    "z": -0.3,
+    "image": "",
+    "category": "digital",
+    "description": "Early-stage UX sketches for a daily prayer companion app. Sits near center \u2014 earnest in tone, moderate in polish.",
+    "link": "",
+    "tags": [
+      "UX",
+      "wireframe",
+      "app"
+    ]
+  },
+  {
+    "id": "n6",
+    "title": "Stained Glass Pattern Library",
+    "x": 0.55,
+    "y": 0.85,
+    "z": 0.7,
+    "image": "images/n6_stained_glass.jpg",
+    "category": "object",
+    "description": "A rigorous vector library of stained glass motifs, built to exacting geometric standards for reuse across chapel signage, bulletins, and windows.",
+    "link": "",
+    "tags": [
+      "vector",
+      "pattern",
+      "sacred"
+    ]
+  },
+  {
+    "id": "n7",
+    "title": "Youth Retreat Poster Series",
+    "x": -0.3,
+    "y": -0.8,
+    "z": -0.7,
+    "image": "images/n7_retreat_posters.jpg",
+    "category": "print",
+    "description": "Loud, xeroxed concert-style posters promoting the annual youth retreat \u2014 riso-printed, hand-cut lettering, made in an afternoon.",
+    "link": "",
+    "tags": [
+      "print",
+      "youth",
+      "riso"
+    ]
+  },
+  {
+    "id": "n8",
+    "title": "Liturgical Calendar App Icons",
+    "x": 0.6,
+    "y": -0.3,
+    "z": 0.15,
+    "image": "images/n8_calendar_icons.jpg",
+    "category": "digital",
+    "description": "A flat, functional icon set marking feast days and liturgical seasons inside a calendar app \u2014 sincere in tone, quick to produce.",
+    "link": "",
+    "tags": [
+      "UI",
+      "icons",
+      "app"
+    ]
+  },
+  {
+    "id": "n9",
+    "title": "Deity Emoji Pack",
+    "x": -0.45,
+    "y": 0.5,
+    "z": -0.4,
+    "image": "images/n9_emoji_pack.jpg",
+    "category": "digital",
+    "description": "A polished, professionally rendered sticker pack of cheeky religious-figure emoji \u2014 technically excellent, tone entirely tongue-in-cheek.",
+    "link": "",
+    "tags": [
+      "illustration",
+      "stickers",
+      "humor"
+    ]
+  }
+]

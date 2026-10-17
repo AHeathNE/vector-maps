@@ -1,0 +1,30 @@
+{
+  "name": "Default",
+  "description": "Dark sci-fi chrome: glossy axes, glowing labels, soft blue glow on panels.",
+  "kind": "3d",
+  "css": {
+    "bg": "#02040c",
+    "surface": "rgba(10, 18, 40, 0.88)",
+    "border": "rgba(120, 190, 255, 0.35)",
+    "text": "#e8f1ff",
+    "textDim": "#8ea6c8",
+    "accent": "#7fd6ff",
+    "headerShadow": "0 0 12px rgba(0, 0, 0, 0.8)",
+    "tooltipGlow": "0 0 24px rgba(80, 160, 255, 0.25)",
+    "panelGlow": "0 0 40px rgba(80, 160, 255, 0.25)"
+  },
+  "lines": {
+    "style": "chrome",
+    "color": "#a9cdff"
+  },
+  "labels": {
+    "color": "#cfe6ff",
+    "glow": true,
+    "glowColor": "#4cb8ff"
+  },
+  "nodes": {
+    "style": "glossy",
+    "saturation": 0.62,
+    "lightness": 0.6
+  }
+}

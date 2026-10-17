@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+# each tool remembers the last folder you opened here
+editor/config.json
+designer/config.json

@@ -1,0 +1,20 @@
+{
+  "title": "3 Axis Map",
+  "subtitle": "Drag to look around the space. Scroll to zoom. Hover a point for a preview, click for details.",
+  "skin": "default",
+  "nodeShape": "circle",
+  "axes": {
+    "x": [
+      "Irreverent",
+      "Reverent"
+    ],
+    "y": [
+      "Low Fidelity",
+      "High Fidelity"
+    ],
+    "z": [
+      "Ephemeral",
+      "Archival"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Blueprint",
+  "description": "Technical-drawing blue: white flat lines and labels on a blueprint-blue background. Nodes are white outlines only — no fill color — trying this out, not final.",
+  "kind": "3d",
+  "css": {
+    "bg": "#154c87",
+    "surface": "rgba(10, 46, 87, 0.92)",
+    "border": "#ffffff",
+    "text": "#ffffff",
+    "textDim": "#bcd6f2",
+    "accent": "#ffffff",
+    "headerShadow": "none",
+    "tooltipGlow": "0 2px 10px rgba(0, 0, 0, 0.35)",
+    "panelGlow": "0 4px 24px rgba(0, 0, 0, 0.4)"
+  },
+  "lines": {
+    "style": "flat",
+    "color": "#ffffff"
+  },
+  "labels": {
+    "color": "#ffffff",
+    "glow": false,
+    "minorColor": "#bcd6f2"
+  },
+  "nodes": {
+    "style": "flat",
+    "fill": "outline",
+    "colorMode": "palette",
+    "palette": [
+      "#f97316",
+      "#ef4444",
+      "#fbbf24",
+      "#4ade80",
+      "#ec4899",
+      "#a78bfa"
+    ],
+    "pixelRadius": 5
+  },
+  "motion": {
+    "tilt": true
+  }
+}

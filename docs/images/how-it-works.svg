@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" role="img" aria-labelledby="t d">
+  <title id="t">How the editor, the designer and a map folder fit together</title>
+  <desc id="d">The editor writes a map folder's content (data and images). The designer writes its look (skins) and previews the pages live. A shared library feeds the designer. Visitors just load the folder as static files.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+      .h { font-size: 19px; font-weight: 700; }
+      .s { font-size: 14px; fill: #57606a; }
+      .m { font-size: 13px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; fill: #0550ae; }
+      .tag { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; fill: #6e7781; }
+      .lbl { font-size: 12.5px; fill: #57606a; font-style: italic; }
+      .box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
+      .tool { fill: #ddf4ff; stroke: #54aeff; stroke-width: 1.5; }
+      .lib { fill: #fff8c5; stroke: #d4a72c; stroke-width: 1.5; }
+      .folder { fill: #f6f8fa; stroke: #8c959f; stroke-width: 1.5; stroke-dasharray: 6 4; }
+      .content { fill: #dafbe1; stroke: #4ac26b; stroke-width: 1.5; }
+      .look { fill: #fbefff; stroke: #c297ff; stroke-width: 1.5; }
+      .pages { fill: #ffffff; stroke: #8c959f; stroke-width: 1.5; }
+      .arrow { stroke: #57606a; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .arrow2 { stroke: #57606a; stroke-width: 2; fill: none; marker-end: url(#arrow); marker-start: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect x="1" y="1" width="998" height="558" rx="18" fill="#ffffff" stroke="#d0d7de" stroke-width="2"/>
+
+  <!-- the map folder -->
+  <rect class="folder" x="330" y="34" width="340" height="360" rx="16"/>
+  <text class="tag" x="350" y="62">A MAP FOLDER — WHAT YOU DEPLOY</text>
+
+  <rect class="content" x="352" y="80" width="296" height="82" rx="12"/>
+  <text class="h" x="370" y="108">data/</text>
+  <text class="s" x="370" y="130">entries, categories, settings, images</text>
+  <text class="m" x="370" y="150">nodes.json · categories.json</text>
+
+  <rect class="look" x="352" y="178" width="296" height="82" rx="12"/>
+  <text class="h" x="370" y="206">skins/</text>
+  <text class="s" x="370" y="228">the look: colors, lines, node style</text>
+  <text class="m" x="370" y="248">default.json · sketchy.json …</text>
+
+  <rect class="pages" x="352" y="276" width="296" height="98" rx="12"/>
+  <text class="h" x="370" y="304">pages</text>
+  <text class="s" x="370" y="326">read the data and the active skin</text>
+  <text class="m" x="370" y="346">index.html (3D) · flat.html (2D)</text>
+  <text class="m" x="370" y="364">+ their scripts, vendor/three.js</text>
+
+  <!-- editor -->
+  <rect class="tool" x="40" y="80" width="220" height="130" rx="14"/>
+  <text class="h" x="60" y="112">Editor</text>
+  <text class="s" x="60" y="136">add and move entries,</text>
+  <text class="s" x="60" y="156">color-code categories,</text>
+  <text class="s" x="60" y="176">attach thumbnails</text>
+  <text class="m" x="60" y="198">editor/server.py</text>
+  <path class="arrow" d="M262,121 L350,121"/>
+  <text class="lbl" x="267" y="108">writes</text>
+
+  <!-- designer: saves into skins/ and drives the pages' live preview -->
+  <rect class="tool" x="800" y="80" width="180" height="150" rx="14"/>
+  <text class="h" x="820" y="112">Designer</text>
+  <text class="s" x="820" y="136">live-preview the pages,</text>
+  <text class="s" x="820" y="156">save the look to skins/ —</text>
+  <text class="s" x="820" y="176">or try it hosted</text>
+  <text class="m" x="820" y="204">designer/server.py</text>
+  <path class="arrow2" d="M798,160 L730,160 L730,325 L650,325"/>
+  <path class="arrow" d="M730,219 L650,219"/>
+
+  <!-- library -->
+  <rect class="lib" x="800" y="290" width="180" height="86" rx="14"/>
+  <text class="h" x="820" y="322">Library</text>
+  <text class="s" x="820" y="344">shared skins to start from</text>
+  <text class="m" x="820" y="364">3d/ · 2d/</text>
+  <path class="arrow" d="M890,288 L890,232"/>
+  <text class="lbl" x="900" y="266">pull from</text>
+
+  <!-- visitors -->
+  <rect class="box" x="330" y="440" width="340" height="70" rx="14"/>
+  <text class="h" x="350" y="470">Anyone with a browser</text>
+  <text class="s" x="350" y="492">opens the folder as plain static files</text>
+  <path class="arrow" d="M500,396 L500,438"/>
+  <text class="lbl" x="512" y="422">deployed anywhere</text>
+
+  <text class="s" x="500" y="538" text-anchor="middle">No build step, no database, no server needed to view a map — the editor and designer are only for building one.</text>
+</svg>

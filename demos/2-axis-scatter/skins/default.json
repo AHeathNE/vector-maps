@@ -1,0 +1,48 @@
+{
+  "name": "Default",
+  "description": "The original look: dark blue-black background, glossy chrome axes, glowing labels, four faintly tinted quadrants, nodes colored by category.",
+  "kind": "3d",
+  "css": {
+    "bg": "#02040c",
+    "surface": "rgba(10, 18, 40, 0.88)",
+    "border": "rgba(120, 190, 255, 0.35)",
+    "text": "#e8f1ff",
+    "textDim": "#8ea6c8",
+    "accent": "#7fd6ff",
+    "headerShadow": "0 0 12px rgba(0, 0, 0, 0.8)",
+    "tooltipGlow": "0 0 24px rgba(80, 160, 255, 0.25)",
+    "panelGlow": "0 0 40px rgba(80, 160, 255, 0.25)"
+  },
+  "lines": {
+    "style": "chrome",
+    "color": "#a9cdff",
+    "thickness": 3
+  },
+  "labels": {
+    "color": "#cfe6ff",
+    "glow": true,
+    "glowColor": "#4cb8ff"
+  },
+  "nodes": {
+    "style": "glossy",
+    "fill": "solid",
+    "colorMode": "category",
+    "palette": [],
+    "outlineColor": "",
+    "outlineSource": "line",
+    "useImages": false,
+    "imageToggle": false,
+    "pixelRadius": 12
+  },
+  "quadrants": {
+    "show": true,
+    "opacity": 0.1,
+    "irreverentHigh": "#f0abfc",
+    "reverentHigh": "#7dd3fc",
+    "irreverentLow": "#fbbf24",
+    "reverentLow": "#34d399"
+  },
+  "motion": {
+    "tilt": true
+  }
+}
