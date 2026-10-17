@@ -47,8 +47,7 @@ is tried next to this folder first.
 ## Three kinds of map
 
 - **Scatter map** — entries placed on two axes (e.g. Irreverent ↔ Reverent,
-  Low ↔ High Fidelity), plus an optional depth (Ephemeral ↔ Archival) used by
-  the 3D view. A **Map settings** card has a **View** choice:
+  Low ↔ High Fidelity). A **Map settings** card has a **View** choice:
   - **Flat** – the 2D chart
   - **3D** – a chrome cross that tilts toward the cursor, with nodes as
     circles, cubes or pyramids

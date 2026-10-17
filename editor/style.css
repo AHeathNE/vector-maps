@@ -801,22 +801,3 @@ body:not([data-site-type="timeline"]) .timeline-only {
 
 /* per-node shape applies to timelines and to the 3D map view */
 body:not([data-site-type="timeline"]):not([data-view="3d"]) .shape-field { display: none; }
-
-/* z position only means anything in the 3D scatter view */
-body:not([data-view="3d"]) .z-field { display: none; }
-
-.z-field__controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.z-field__controls input[type="range"] {
-  flex: 1;
-  accent-color: var(--accent);
-}
-
-.z-field__controls input[type="number"] {
-  width: 72px;
-  flex: none;
-}

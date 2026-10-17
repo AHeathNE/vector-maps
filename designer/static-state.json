@@ -61,7 +61,7 @@
         {
           "file": "default",
           "name": "Default",
-          "description": "The original look: dark blue-black background, glossy chrome axes, glowing labels, four faintly tinted quadrants, nodes colored by category.",
+          "description": "The original look: dark blue-black background, glossy chrome axes, glowing labels, nodes colored by category.",
           "kind": "3d"
         }
       ],

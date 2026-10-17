@@ -4,9 +4,9 @@ The 2-axis portfolio map comes in two views of the same data, side by side:
 
 - **`flat.html`** — a flat CSS chart (Irreverent ↔ Reverent, Low ↔ High
   Fidelity), a thumbnail/dot toggle, a detail panel.
-- **`map3d.html`** — the same map in 3D (Three.js): a chrome cross over four
-  faintly tinted quadrants that tilts toward the cursor, with a short corner
-  rod for the Ephemeral ↔ Archival depth. **`index.html`** is a copy of
+- **`map3d.html`** — the same map in 3D (Three.js): a chrome
+  cross that tilts toward the cursor (the four tinted quadrant panes are an
+  optional skin setting, off by default). **`index.html`** is a copy of
   whichever view is active (the editor's "View" setting swaps it), so
   keep the two 3D files identical.
 
@@ -28,8 +28,7 @@ editing stays fast and never serves a stale file.)
 ## Your own data
 
 Edit `data/nodes.json` and `data/categories.json`. Each node needs `x`,
-`y` (each -1 to 1), a `title`, and optionally a `z` (-1 Ephemeral to 1
-Archival — only the 3D view uses it), a `category` (id from categories.json),
+`y` (each -1 to 1), a `title`, and optionally a `category` (id from categories.json),
 `description`, `tags`, `link`, and `image`.
 
 ## Skins
@@ -95,7 +94,7 @@ are specific to the 2-axis map:
 
 ```json
 {
-  "quadrants": { "show": true, "opacity": 0.1, "irreverentHigh": "#f0abfc", "reverentHigh": "#7dd3fc", "irreverentLow": "#fbbf24", "reverentLow": "#34d399" },
+  "quadrants": { "show": false, "opacity": 0.1, "irreverentHigh": "#f0abfc", "reverentHigh": "#7dd3fc", "irreverentLow": "#fbbf24", "reverentLow": "#34d399" },
   "motion": { "tilt": true }
 }
 ```

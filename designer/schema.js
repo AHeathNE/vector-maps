@@ -262,7 +262,7 @@ export const SCHEMAS = {
         imageToggle: false
       },
       quadrants: {
-        show: true,
+        show: false,
         opacity: 0.1,
         irreverentHigh: "#f0abfc",
         reverentHigh: "#7dd3fc",

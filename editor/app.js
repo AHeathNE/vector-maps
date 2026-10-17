@@ -24,8 +24,6 @@
   const fieldCategory = document.getElementById("fieldCategory");
   const fieldX = document.getElementById("fieldX");
   const fieldY = document.getElementById("fieldY");
-  const fieldZ = document.getElementById("fieldZ");
-  const fieldZRange = document.getElementById("fieldZRange");
   const fieldDescription = document.getElementById("fieldDescription");
   const fieldTags = document.getElementById("fieldTags");
   const fieldLink = document.getElementById("fieldLink");
@@ -173,14 +171,6 @@
     setTarget(x, y);
   });
 
-  function setZ(z) {
-    const v = clamp(z);
-    fieldZ.value = v.toFixed(2);
-    fieldZRange.value = v;
-  }
-  fieldZ.addEventListener("input", () => setZ(parseFloat(fieldZ.value) || 0));
-  fieldZRange.addEventListener("input", () => setZ(parseFloat(fieldZRange.value) || 0));
-
   fieldX.addEventListener("input", syncTargetFromFields);
   fieldY.addEventListener("input", syncTargetFromFields);
 
@@ -200,9 +190,7 @@
   function quadrantLabel(node) {
     const xLabel = node.x >= 0 ? "Reverent" : "Irreverent";
     const yLabel = node.y >= 0 ? "High Fidelity" : "Low Fidelity";
-    if (siteSettings.view !== "3d") return `${xLabel} / ${yLabel}`;
-    const zLabel = (node.z || 0) >= 0 ? "Archival" : "Ephemeral";
-    return `${xLabel} / ${yLabel} / ${zLabel}`;
+    return `${xLabel} / ${yLabel}`;
   }
 
   function categoryById(id) {
@@ -258,7 +246,7 @@
           isTimeline()
             ? `${formatDate(node.date)} · ${SHAPE_NAMES[node.shape] || "Default shape"}`
             : siteSettings.view === "3d"
-            ? `${quadrantLabel(node)} · x ${node.x.toFixed(2)}, y ${node.y.toFixed(2)}, z ${(node.z || 0).toFixed(2)}`
+            ? `${quadrantLabel(node)} · x ${node.x.toFixed(2)}, y ${node.y.toFixed(2)}`
             : `${quadrantLabel(node)} · x ${node.x.toFixed(2)}, y ${node.y.toFixed(2)}`
         )
       );
@@ -471,7 +459,6 @@
     fieldY.value = 0;
     fieldCategory.value = "";
     setTarget(0, 0);
-    setZ(0);
     fieldDate.value = "";
     fieldShape.value = "";
     imagePreviewWrap.hidden = true;
@@ -499,7 +486,6 @@
       fieldDate.value = toInputValue(node.date, dateScheme());
     } else {
       setTarget(node.x, node.y);
-      setZ(node.z || 0);
     }
 
     if (node.image) {
@@ -581,7 +567,6 @@
       payload.shape = fieldShape.value;
       payload.x = clamp(parseFloat(fieldX.value) || 0);
       payload.y = clamp(parseFloat(fieldY.value) || 0);
-      payload.z = clamp(parseFloat(fieldZ.value) || 0);
     }
 
     if (pendingImageDataUrl) payload.imageDataUrl = pendingImageDataUrl;

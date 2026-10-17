@@ -78,7 +78,7 @@ let SKIN = {
   },
   // the four tinted panes behind the quadrants
   quadrants: {
-    show: true,
+    show: false,
     opacity: 0.1,
     irreverentHigh: "#f0abfc",
     reverentHigh: "#7dd3fc",
@@ -498,7 +498,6 @@ function layout() {
   const shrink = (CAM_Z - worstZ) / CAM_Z;
   halfW = Math.min(reachX * shrink, reachY * shrink * 1.7);
   halfH = reachY * shrink;
-  const halfD = halfH * 0.6; // z extent: how far a node can sit toward/away from camera
 
   // pixel-based sizing for the line thickness and node radius
   const worldUnitsPerPixel = (2 * CAM_Z * tanHalf) / renderer.domElement.clientHeight;
@@ -532,14 +531,6 @@ function layout() {
   // axes
   content.add(makeAxis("x", halfW, lineR), makeAxis("y", halfH, lineR));
 
-  // z axis: a short corner rod running toward/away from the camera, since
-  // running it through the middle would cut straight through every node
-  const zCornerX = -halfW + 0.6;
-  const zCornerY = -halfH + 0.6;
-  const zAxis = makeAxis("z", halfD, lineR);
-  zAxis.position.set(zCornerX, zCornerY, 0);
-  content.add(zAxis);
-
   // axis end labels
   const labels = [
     ["Irreverent", -halfW + 1.3, -0.3],
@@ -553,18 +544,6 @@ function layout() {
     content.add(s);
   });
 
-  // z end labels sit at the corner rod's two ends — +z (toward camera) is
-  // Ephemeral, -z (receding, "filed away") is Archival
-  const zLabels = [
-    ["Ephemeral", zCornerX, zCornerY, halfD + 0.6],
-    ["Archival", zCornerX, zCornerY, -halfD - 0.6]
-  ];
-  zLabels.forEach(([text, x, y, z]) => {
-    const s = makeLabel(text);
-    s.position.set(x, y, z);
-    content.add(s);
-  });
-
   // nodes
   data.forEach((d, i) => {
     const shape = SHAPES[d.shape] ? d.shape : defaultShape;
@@ -572,10 +551,8 @@ function layout() {
     const core = buildCore(d, shape, nodeR);
     const hit = new THREE.Mesh(hitGeo, hitMat);
     group.add(core, hit);
-    // data z is -1 (Ephemeral) to 1 (Archival); Ephemeral pops forward toward
-    // the camera (+world z) and Archival recedes into the distance ("filed
-    // away"), so the data value is negated going into world space
-    group.position.set(d.x * halfW * 0.9, d.y * halfH * 0.9, 0.15 - (d.z || 0) * halfD * 0.85);
+    // two axes only: every node sits on the x/y plane, just in front of it
+    group.position.set(d.x * halfW * 0.9, d.y * halfH * 0.9, 0.15);
     content.add(group);
     // core.scale may already encode the node's actual size — sprite-based
     // fills (outline, solid-outline, sketch, image) set it via
@@ -624,8 +601,7 @@ function pick() {
 }
 
 function quadrantLabel(d) {
-  const base = `${d.x >= 0 ? "Reverent" : "Irreverent"} · ${d.y >= 0 ? "High" : "Low"} fidelity`;
-  return `${base} · ${(d.z || 0) >= 0 ? "Archival" : "Ephemeral"}`;
+  return `${d.x >= 0 ? "Reverent" : "Irreverent"} · ${d.y >= 0 ? "High" : "Low"} fidelity`;
 }
 
 function setHovered(node) {

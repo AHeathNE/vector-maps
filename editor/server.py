@@ -289,9 +289,7 @@ def sanitize_node(root, payload, existing=None):
     else:
         node["x"] = clamp(payload.get("x", node.get("x", 0)))
         node["y"] = clamp(payload.get("y", node.get("y", 0)))
-        # only meaningful in the 3D view, but stored regardless so switching
-        # flat -> 3d -> flat never loses it, same as x/y
-        node["z"] = clamp(payload.get("z", node.get("z", 0)))
+        node.pop("z", None)  # two axes only; older maps may still carry a depth
     shape = payload.get("shape", node.get("shape", ""))
     if shape in SHAPES:
         node["shape"] = shape

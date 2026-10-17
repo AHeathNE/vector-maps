@@ -65,7 +65,7 @@ Deploy the folder to GitHub Pages, Netlify, S3, or any static file host — that
 | Map | Placement | Example entry |
 |---|---|---|
 | 1 axis — timeline | a `date` (`"2019"`, `"2019-06"` or `"2019-06-14"`) | `{"title": "Hymnal Redesign", "date": "2016", "category": "print"}` |
-| 2 axes — scatter | `x` and `y`, each from −1 to 1 (plus an optional `z` depth used by the 3D view) | `{"title": "Sunday School Zine", "x": 0.4, "y": -0.65, "z": -0.55, "category": "people"}` |
+| 2 axes — scatter | `x` and `y`, each from −1 to 1 | `{"title": "Sunday School Zine", "x": 0.4, "y": -0.65, "category": "people"}` |
 | 3 axes — map | `x`, `y` and `z`, each from −1 to 1 | `{"title": "Hymnal Redesign", "x": 0.7, "y": 0.6, "z": 0.75, "category": "print"}` |
 
 Every entry can also have a `description`, `tags`, a `link`, an `image` and a `shape` (`circle`, `cube` or `pyramid`). A node's color comes from its category (or from where it sits, depending on the skin) — never hand-picked per node.
