@@ -801,3 +801,19 @@ body:not([data-site-type="timeline"]) .timeline-only {
 
 /* per-node shape applies to timelines and to the 3D map view */
 body:not([data-site-type="timeline"]):not([data-view="3d"]) .shape-field { display: none; }
+
+.field--check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.field--check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.field--check .field__label {
+  margin: 0;
+}

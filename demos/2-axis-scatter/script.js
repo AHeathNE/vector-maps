@@ -279,9 +279,17 @@
 
   Promise.all([
     fetch("data/nodes.json").then((res) => res.json()),
-    fetch("data/categories.json").then((res) => res.json())
+    fetch("data/categories.json").then((res) => res.json()),
+    fetch("data/config.json").then((res) => res.json()).catch(() => ({}))
   ])
-    .then(([nodes, categories]) => {
+    .then(([nodes, categories, config]) => {
+      // optional page text and legend toggle from data/config.json
+      if (config.title) {
+        document.getElementById("title").textContent = config.title;
+        document.title = config.title;
+      }
+      if (typeof config.subtitle === "string") document.getElementById("subtitle").textContent = config.subtitle;
+      if (config.showLegend === false) categories = [];
       categoriesById = {};
       categories.forEach((cat) => {
         categoriesById[cat.id] = cat;

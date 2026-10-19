@@ -43,6 +43,13 @@ is tried next to this folder first.
   reflected on the map, with a legend explaining what each color means.
 - Set the map's title, default node shape, and (for a timeline) how dates are
   shown.
+- **Title, subtext and legend (scatter maps):** Map settings has a title, a
+  subtext line, and a checkbox to show or hide the category legend. They save to
+  `title`, `subtitle` and `showLegend` in the map's `data/config.json`, which both
+  the flat and 3D pages read.
+- **Undo:** the **Undo** button in the header (or Ctrl/Cmd+Z outside a text field)
+  reverses the last add, edit or delete of an entry or category, including a
+  deleted entry's image. The last 30 changes are kept while the editor is running.
 
 ## Three kinds of map
 

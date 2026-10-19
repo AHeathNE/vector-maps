@@ -16,6 +16,7 @@
         <h1 class="header__title">Editor</h1>
         <p class="header__subtitle">Manage the entries on a map or timeline site folder.</p>
       </div>
+      <button type="button" class="btn btn--ghost" id="undoBtn" disabled title="Undo the last change (Ctrl/Cmd+Z)">&#8630; Undo</button>
     </div>
     <div class="folder-bar" id="folderBar">
       <span class="folder-bar__label">Site folder</span>
@@ -82,7 +83,7 @@
 
         <label class="field timeline-only">
           <span class="field__label">Date <span class="field__hint" id="dateHint"></span></span>
-          <input type="number" id="fieldDate" required />
+          <input type="number" id="fieldDate" />
         </label>
 
         <label class="field shape-field">
@@ -196,6 +197,18 @@
 
       <form class="editor-card scatter-only" id="mapForm">
         <h2 class="editor-card__title">Map settings</h2>
+        <label class="field">
+          <span class="field__label">Title</span>
+          <input type="text" id="mapTitle" placeholder="Page title" />
+        </label>
+        <label class="field">
+          <span class="field__label">Subtext</span>
+          <textarea id="mapSubtitle" rows="2" placeholder="Line shown under the title"></textarea>
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" id="mapLegend" checked />
+          <span class="field__label">Show the category legend</span>
+        </label>
         <div class="field-row">
           <label class="field">
             <span class="field__label">View</span>

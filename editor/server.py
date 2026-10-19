@@ -22,7 +22,9 @@ import datetime
 import json
 import mimetypes
 import re
+import os
 import shutil
+import tempfile
 import threading
 import uuid
 import webbrowser
@@ -152,6 +154,16 @@ def sanitize_site_settings(payload, existing, site_type="timeline"):
             settings["dateScheme"] = payload["dateScheme"]
     else:
         settings["view"] = payload["view"] if payload.get("view") in VIEWS else settings.get("view", "flat")
+        if "title" in payload:
+            title = str(payload["title"]).strip()
+            if title:
+                settings["title"] = title
+            else:
+                settings.pop("title", None)  # blank = back to the page's built-in title
+        if "subtitle" in payload:
+            settings["subtitle"] = str(payload["subtitle"]).strip()
+        if "showLegend" in payload:
+            settings["showLegend"] = bool(payload["showLegend"])
     return settings
 
 
@@ -247,6 +259,68 @@ def delete_image_file(root, image_path):
     img_dir = images_dir(root).resolve()
     if img_dir in candidate.parents and candidate.exists():
         candidate.unlink()
+
+
+# ---------- undo history ----------
+# Before every change to nodes/categories, snapshot nodes.json, categories.json
+# and images/ (hard-linked, so it's cheap and survives a deleted image) into a
+# temp folder. Undo restores the newest snapshot. History lives only for this
+# server run and is capped.
+
+HISTORY_LIMIT = 30
+_history = []  # [{"root": Path, "dir": Path}]
+
+
+def _link_or_copy(src, dst):
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copy2(src, dst)
+
+
+def push_history(root):
+    snap = Path(tempfile.mkdtemp(prefix="editor-undo-"))
+    for f in (nodes_file(root), categories_file(root)):
+        if f.exists():
+            shutil.copy2(f, snap / f.name)
+    img = images_dir(root)
+    if img.is_dir():
+        shutil.copytree(img, snap / "images", copy_function=_link_or_copy)
+    _history.append({"root": root, "dir": snap})
+    while len(_history) > HISTORY_LIMIT:
+        shutil.rmtree(_history.pop(0)["dir"], ignore_errors=True)
+
+
+def history_count(root):
+    return sum(1 for h in _history if h["root"] == root)
+
+
+def pop_history(root):
+    for i in range(len(_history) - 1, -1, -1):
+        if _history[i]["root"] == root:
+            return _history.pop(i)
+    return None
+
+
+def restore_snapshot(root, entry):
+    snap = entry["dir"]
+    for f in (nodes_file(root), categories_file(root)):
+        if (snap / f.name).exists():
+            shutil.copy2(snap / f.name, f)
+    img = images_dir(root)
+    snap_img = snap / "images"
+    wanted = {p.name for p in snap_img.iterdir()} if snap_img.is_dir() else set()
+    if img.is_dir():
+        for p in img.iterdir():
+            if p.is_file() and p.name not in wanted:
+                p.unlink()
+    if snap_img.is_dir():
+        img.mkdir(parents=True, exist_ok=True)
+        for p in snap_img.iterdir():
+            dst = img / p.name
+            if not dst.exists() or dst.stat().st_ino != p.stat().st_ino:
+                shutil.copy2(p, dst)
+    shutil.rmtree(snap, ignore_errors=True)
 
 
 def parse_folder_path(raw_path):
@@ -418,6 +492,14 @@ class Handler(SimpleHTTPRequestHandler):
                     settings.setdefault("view", "flat")
             self._send_json(200, {"type": site_type, "settings": settings})
             return
+        if path == "/api/history":
+            root = self._require_root()
+            if root is None:
+                return
+            with _lock:
+                count = history_count(root)
+            self._send_json(200, {"count": count})
+            return
         if path == "/api/nodes":
             root = self._require_root()
             if root is None:
@@ -481,6 +563,16 @@ class Handler(SimpleHTTPRequestHandler):
         if root is None:
             return
         try:
+            if resource == "undo":
+                with _lock:
+                    entry = pop_history(root)
+                    if entry is None:
+                        self._send_json(409, {"error": "Nothing to undo."})
+                        return
+                    restore_snapshot(root, entry)
+                    count = history_count(root)
+                self._send_json(200, {"ok": True, "count": count})
+                return
             payload = self._read_json_body()
             if resource == "site":
                 with _lock:
@@ -493,6 +585,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self._send_json(200, {"type": site_type, "settings": settings})
             elif resource == "nodes":
                 with _lock:
+                    push_history(root)
                     nodes = load_json(nodes_file(root))
                     node = sanitize_node(root, payload)
                     node["id"] = f"n_{uuid.uuid4().hex[:10]}"
@@ -501,6 +594,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self._send_json(201, node)
             elif resource == "categories":
                 with _lock:
+                    push_history(root)
                     categories = load_json(categories_file(root))
                     cat = sanitize_category(payload)
                     cat["id"] = f"c_{uuid.uuid4().hex[:8]}"
@@ -531,6 +625,7 @@ class Handler(SimpleHTTPRequestHandler):
                     if idx is None:
                         self._send_json(404, {"error": "node not found"})
                         return
+                    push_history(root)
                     updated = sanitize_node(root, payload, existing=nodes[idx])
                     updated["id"] = item_id
                     nodes[idx] = updated
@@ -543,6 +638,7 @@ class Handler(SimpleHTTPRequestHandler):
                     if idx is None:
                         self._send_json(404, {"error": "category not found"})
                         return
+                    push_history(root)
                     updated = sanitize_category(payload, existing=categories[idx])
                     updated["id"] = item_id
                     categories[idx] = updated
@@ -570,6 +666,7 @@ class Handler(SimpleHTTPRequestHandler):
                 if idx is None:
                     self._send_json(404, {"error": "node not found"})
                     return
+                push_history(root)
                 removed = nodes.pop(idx)
                 delete_image_file(root, removed.get("image"))
                 save_json(nodes_file(root), nodes)
@@ -581,6 +678,7 @@ class Handler(SimpleHTTPRequestHandler):
                 if idx is None:
                     self._send_json(404, {"error": "category not found"})
                     return
+                push_history(root)
                 categories.pop(idx)
                 save_json(categories_file(root), categories)
                 # nodes referencing the deleted category fall back to "no category"

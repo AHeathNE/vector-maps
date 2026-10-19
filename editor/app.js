@@ -79,6 +79,9 @@
   const mapForm = document.getElementById("mapForm");
   const mapView = document.getElementById("mapView");
   const mapShape = document.getElementById("mapShape");
+  const mapTitle = document.getElementById("mapTitle");
+  const mapSubtitle = document.getElementById("mapSubtitle");
+  const mapLegend = document.getElementById("mapLegend");
   const mapError = document.getElementById("mapError");
 
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -364,6 +367,46 @@
     categoryError.hidden = !msg;
   }
 
+  const undoBtn = document.getElementById("undoBtn");
+
+  async function refreshUndo() {
+    try {
+      const res = await fetch("/api/history");
+      const body = await res.json();
+      undoBtn.disabled = !(body.count > 0);
+      undoBtn.textContent = body.count > 0 ? `\u21B6 Undo (${body.count})` : "\u21B6 Undo";
+    } catch (err) {
+      undoBtn.disabled = true;
+    }
+  }
+
+  async function undoLast() {
+    if (undoBtn.disabled) return;
+    undoBtn.disabled = true;
+    try {
+      const res = await fetch("/api/undo", { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Undo failed");
+      }
+      resetForm();
+      await Promise.all([loadCategories(), loadNodes()]);
+    } catch (err) {
+      showError(err.message || "Couldn't undo.");
+      console.error(err);
+    }
+    refreshUndo();
+  }
+
+  undoBtn.addEventListener("click", undoLast);
+  document.addEventListener("keydown", (e) => {
+    if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.key.toLowerCase() !== "z") return;
+    const t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return; // keep native text undo
+    e.preventDefault();
+    undoLast();
+  });
+
   async function loadNodes() {
     try {
       const res = await fetch("/api/nodes");
@@ -371,6 +414,7 @@
       renderExistingDots();
       renderList();
       renderCategoryList(); // node counts per category can change
+      refreshUndo();
     } catch (err) {
       showError("Couldn't load nodes. Is server.py running?");
       console.error(err);
@@ -383,6 +427,7 @@
       categories = await res.json();
       renderCategorySelect();
       renderCategoryList();
+      refreshUndo();
     } catch (err) {
       showCategoryError("Couldn't load categories.");
       console.error(err);
@@ -619,6 +664,9 @@
     } else {
       mapView.value = siteSettings.view || "flat";
       mapShape.value = siteSettings.nodeShape || "circle";
+      mapTitle.value = siteSettings.title || "";
+      mapSubtitle.value = siteSettings.subtitle || "";
+      mapLegend.checked = siteSettings.showLegend !== false;
     }
     fieldShape.options[0].textContent = `Site default (${SHAPE_NAMES[(isTimeline() ? siteSettings.nodeShape : siteSettings.nodeShape) || "circle"]})`;
     resetForm();
@@ -655,7 +703,13 @@
       const res = await fetch("/api/site", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ view: mapView.value, nodeShape: mapShape.value })
+        body: JSON.stringify({
+          view: mapView.value,
+          nodeShape: mapShape.value,
+          title: mapTitle.value,
+          subtitle: mapSubtitle.value,
+          showLegend: mapLegend.checked
+        })
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || "Save failed");

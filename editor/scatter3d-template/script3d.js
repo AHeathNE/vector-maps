@@ -773,8 +773,14 @@ async function boot() {
     data.forEach((d, i) => (d._i = i));
     const config = await load("data/config.json").catch(() => ({}));
     if (SHAPE_NAMES.includes(config.nodeShape)) defaultShape = config.nodeShape;
+    // optional page text from data/config.json
+    if (config.title) {
+      $("title").textContent = config.title;
+      document.title = config.title;
+    }
+    if (typeof config.subtitle === "string") $("subtitle").textContent = config.subtitle;
     categories.forEach((c) => (categoriesById[c.id] = c));
-    if (categories.length) {
+    if (categories.length && config.showLegend !== false) {
       legend.hidden = false;
       categories.forEach((c) => {
         const row = document.createElement("span");
