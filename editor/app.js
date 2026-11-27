@@ -75,6 +75,7 @@
   const siteSubtitle = document.getElementById("siteSubtitle");
   const siteScheme = document.getElementById("siteScheme");
   const siteShape = document.getElementById("siteShape");
+  const siteLegend = document.getElementById("siteLegend");
   const siteError = document.getElementById("siteError");
   const mapForm = document.getElementById("mapForm");
   const mapView = document.getElementById("mapView");
@@ -660,6 +661,7 @@
       siteSubtitle.value = siteSettings.subtitle || "";
       siteScheme.value = dateScheme();
       siteShape.value = siteSettings.nodeShape || "circle";
+      siteLegend.checked = siteSettings.showLegend !== false;
       configureDateInput();
     } else {
       mapView.value = siteSettings.view || "flat";
@@ -683,7 +685,8 @@
           title: siteTitle.value,
           subtitle: siteSubtitle.value,
           dateScheme: siteScheme.value,
-          nodeShape: siteShape.value
+          nodeShape: siteShape.value,
+          showLegend: siteLegend.checked
         })
       });
       const body = await res.json().catch(() => ({}));

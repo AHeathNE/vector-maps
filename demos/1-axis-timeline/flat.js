@@ -430,7 +430,8 @@
     designerReady();
 
     categories.forEach((c) => (categoriesById[c.id] = c));
-    renderLegend(categories);
+    // data/config.json "showLegend": false hides the legend (colors stay)
+    renderLegend(config.showLegend === false ? [] : categories);
 
     data = nodes.filter((d) => !isNaN(parseDate(d.date)));
     if (!data.length) {

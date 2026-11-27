@@ -152,6 +152,8 @@ def sanitize_site_settings(payload, existing, site_type="timeline"):
             settings["subtitle"] = str(payload["subtitle"]).strip()
         if payload.get("dateScheme") in DATE_SCHEMES:
             settings["dateScheme"] = payload["dateScheme"]
+        if "showLegend" in payload:
+            settings["showLegend"] = bool(payload["showLegend"])
     else:
         settings["view"] = payload["view"] if payload.get("view") in VIEWS else settings.get("view", "flat")
         if "title" in payload:

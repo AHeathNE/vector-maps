@@ -886,7 +886,8 @@ async function boot() {
   document.title = config.title || "Timeline";
 
   categories.forEach((c) => (categoriesById[c.id] = c));
-  if (categories.length) {
+  // data/config.json "showLegend": false hides the legend (colors stay)
+  if (categories.length && config.showLegend !== false) {
     legend.hidden = false;
     categories.forEach((c) => {
       const row = document.createElement("span");
