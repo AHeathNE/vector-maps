@@ -60,8 +60,28 @@
   let SKIN = {
     css: { accent: "#7dd3fc", accent2: "#f0abfc" },
     lines: { thickness: 3 },
-    nodes: { size: 14, thumbSize: 40 }
+    nodes: { size: 14, thumbSize: 40 },
+    // pixelate / dither — see lofi.js
+    lofi: window.LoFi.defaults()
   };
+
+  // skin "lofi" (see lofi.js): images go chunky and/or dithered; text is left alone.
+  // Thumbnails grow on hover, so they're processed for about twice their size.
+  let panelImageUrl = "";
+  function setThumbImage(thumb, url) {
+    window.LoFi.showImage(thumb, url, SKIN.lofi, SKIN.nodes.thumbSize * 2, (u) => (thumb.style.backgroundImage = `url("${u}")`));
+  }
+  function setPanelImage(url) {
+    panelImageUrl = url;
+    window.LoFi.showImage(panelImage, url, SKIN.lofi, 280, (u) => (panelImage.src = u));
+  }
+  function applyLofi() {
+    data.forEach((d) => {
+      const thumb = d._el && d._el.querySelector(".node__thumb");
+      if (thumb) setThumbImage(thumb, d.image);
+    });
+    if (panelImageUrl) setPanelImage(panelImageUrl);
+  }
 
   const CSS_VAR_MAP = {
     bg: "--bg",
@@ -169,7 +189,7 @@
       if (d.image) {
         const thumb = document.createElement("span");
         thumb.className = "node__thumb";
-        thumb.style.backgroundImage = `url("${d.image}")`;
+        setThumbImage(thumb, d.image);
         el.appendChild(thumb);
       }
 
@@ -292,7 +312,7 @@
     panelContent.hidden = false;
 
     if (d.image) {
-      panelImage.src = d.image;
+      setPanelImage(d.image);
       panelImage.alt = d.title;
       panelImageWrap.hidden = false;
     } else {
@@ -401,10 +421,12 @@
       SKIN = {
         css: { ...SKIN.css, ...skin.css },
         lines: { ...SKIN.lines, ...skin.lines },
-        nodes: { ...SKIN.nodes, ...skin.nodes }
+        nodes: { ...SKIN.nodes, ...skin.nodes },
+        lofi: { ...SKIN.lofi, ...skin.lofi }
       };
     }
     applySkinCSS();
+    window.LoFi.applyHeader(SKIN.lofi);
     designerReady();
 
     categories.forEach((c) => (categoriesById[c.id] = c));
@@ -437,15 +459,18 @@
     // what the designer needs to know to build the right form: which kind
     // of skin this page takes, which data/config.json key holds the active
     // one, and which optional features it can render
-    meta: { label: "Timeline (2D)", kind: "2d", axes: 1, configKey: "skin2d", capabilities: ["axisLine"] },
+    meta: { label: "Timeline (2D)", kind: "2d", axes: 1, configKey: "skin2d", capabilities: ["axisLine", "lofi"] },
     getSkin: () => SKIN,
     applySkin(partial) {
       SKIN = {
         css: { ...SKIN.css, ...partial.css },
         lines: { ...SKIN.lines, ...partial.lines },
-        nodes: { ...SKIN.nodes, ...partial.nodes }
+        nodes: { ...SKIN.nodes, ...partial.nodes },
+        lofi: { ...SKIN.lofi, ...partial.lofi }
       };
       applySkinCSS();
+      window.LoFi.applyHeader(SKIN.lofi);
+      applyLofi();
       layout(); // node sizes change how entries stack
     }
   };

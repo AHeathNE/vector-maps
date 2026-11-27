@@ -51,6 +51,22 @@ folder path and press **Open**. A relative name works too — `timeline` or
    - **Add to the library** puts a copy on the shared shelf (below).
    - **Download JSON** if you'd rather place the file yourself.
 
+## Lo-fi
+
+Every map's skin has a **Lo-fi** section:
+
+- **Pixel size** — crunches the map down to chunky pixels (1 = off). On 3D
+  pages the scene renders at low resolution with hard edges; on flat pages
+  the images go chunky. Text on the map always stays sharp.
+- **Pixelate the header too** — also crunches the title and subtext. Off by
+  default.
+- **Dither images** — ordered (Bayer) dithering of every image, in black &
+  white or in the skin's own text and background colors, with an adjustable
+  dot size. Images are processed in the browser; the files are never changed.
+
+The effect is part of the skin, so it's the designer's choice — viewers
+don't get a switch. Each map does it with its own `lofi.js`.
+
 ## The library
 
 `library/3d/` and `library/2d/` are a shelf of skins to pull from — pick one

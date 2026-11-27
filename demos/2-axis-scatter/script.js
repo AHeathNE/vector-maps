@@ -42,8 +42,30 @@
       quadrantIrreverentLow: "rgba(251, 191, 36, 0.06)",
       quadrantReverentLow: "rgba(52, 211, 153, 0.06)"
     },
-    nodes: { size: 14, thumbSize: 40 }
+    nodes: { size: 14, thumbSize: 40 },
+    // pixelate / dither — see lofi.js
+    lofi: window.LoFi.defaults()
   };
+
+  // every thumbnail on the chart, so a lofi change can redraw them
+  let thumbs = [];
+  let panelImageUrl = "";
+
+  // thumbnails grow on hover, so process them for about twice their resting size
+  function setThumbImage(thumb, url) {
+    window.LoFi.showImage(thumb, url, SKIN.lofi, SKIN.nodes.thumbSize * 2, (u) => (thumb.style.backgroundImage = `url("${u}")`));
+  }
+
+  function setPanelImage(url) {
+    panelImageUrl = url;
+    window.LoFi.showImage(panelImage, url, SKIN.lofi, 280, (u) => (panelImage.src = u));
+  }
+
+  // skin "lofi" (see lofi.js): images go chunky and/or dithered; text is left alone
+  function applyLofi() {
+    thumbs.forEach(({ thumb, url }) => setThumbImage(thumb, url));
+    if (panelImageUrl) setPanelImage(panelImageUrl);
+  }
 
   const CSS_VAR_MAP = {
     bg: "--bg",
@@ -131,6 +153,7 @@
 
   function renderNodes(nodes) {
     nodesContainer.innerHTML = "";
+    thumbs = [];
     nodes.forEach((node) => {
       const el = document.createElement("div");
       el.className = "node";
@@ -152,7 +175,8 @@
       if (node.image) {
         const thumb = document.createElement("span");
         thumb.className = "node__thumb";
-        thumb.style.backgroundImage = `url("${node.image}")`;
+        thumbs.push({ thumb, url: node.image });
+        setThumbImage(thumb, node.image);
         el.appendChild(thumb);
       }
 
@@ -189,7 +213,7 @@
     panelContent.hidden = false;
 
     if (node.image) {
-      panelImage.src = node.image;
+      setPanelImage(node.image);
       panelImage.alt = node.title;
       panelImageWrap.hidden = false;
     } else {
@@ -270,10 +294,13 @@
       if (skin) {
         SKIN = {
           css: { ...SKIN.css, ...skin.css },
-          nodes: { ...SKIN.nodes, ...skin.nodes }
+          nodes: { ...SKIN.nodes, ...skin.nodes },
+          lofi: { ...SKIN.lofi, ...skin.lofi }
         };
       }
       applySkinCSS();
+      window.LoFi.applyHeader(SKIN.lofi);
+      applyLofi();
       designerReady();
     });
 
@@ -289,12 +316,12 @@
         document.title = config.title;
       }
       if (typeof config.subtitle === "string") document.getElementById("subtitle").textContent = config.subtitle;
-      if (config.showLegend === false) categories = [];
       categoriesById = {};
       categories.forEach((cat) => {
         categoriesById[cat.id] = cat;
       });
-      renderLegend(categories);
+      // hiding the legend keeps the category colors on the dots
+      renderLegend(config.showLegend === false ? [] : categories);
       renderNodes(nodes);
     })
     .catch((err) => {
@@ -312,14 +339,17 @@
     ready: designerReadyPromise,
     // what the designer needs to know to build the right form: which kind
     // of skin this page takes and which optional features it can render
-    meta: { label: "Portfolio Map (2D)", kind: "2d", axes: 2, configKey: "skin2d", capabilities: ["quadrants"] },
+    meta: { label: "Portfolio Map (2D)", kind: "2d", axes: 2, configKey: "skin2d", capabilities: ["quadrants", "lofi"] },
     getSkin: () => SKIN,
     applySkin(partial) {
       SKIN = {
         css: { ...SKIN.css, ...partial.css },
-        nodes: { ...SKIN.nodes, ...partial.nodes }
+        nodes: { ...SKIN.nodes, ...partial.nodes },
+        lofi: { ...SKIN.lofi, ...partial.lofi }
       };
       applySkinCSS();
+      window.LoFi.applyHeader(SKIN.lofi);
+      applyLofi();
     }
   };
 })();

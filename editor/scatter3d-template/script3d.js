@@ -87,7 +87,9 @@ let SKIN = {
   },
   // the map normally tilts and slides toward the cursor; a skin can turn
   // that off for a calmer, static map
-  motion: { tilt: true }
+  motion: { tilt: true },
+  // pixelate / dither — see lofi.js
+  lofi: window.LoFi.defaults()
 };
 
 function mergeSkin(base, skin) {
@@ -97,8 +99,16 @@ function mergeSkin(base, skin) {
     labels: { ...base.labels, ...skin.labels },
     nodes: { ...base.nodes, ...skin.nodes },
     quadrants: { ...base.quadrants, ...skin.quadrants },
-    motion: { ...base.motion, ...skin.motion }
+    motion: { ...base.motion, ...skin.motion },
+    lofi: { ...base.lofi, ...skin.lofi }
   };
+}
+
+// skin "lofi" (see lofi.js): the scene renders chunky with its text sharp
+// on top, and the photos in the nodes can be dithered
+function nodeImage(d) {
+  // the photo fills ~88/128 of a sprite that's ~2.4 node radii across
+  return window.LoFi.nodeImage(imageCache[d.image], (SKIN.nodes.pixelRadius * 2.4 * 88) / 128, SKIN.lofi);
 }
 
 function applySkinCSS() {
@@ -136,6 +146,7 @@ function outlineColorFor(d) {
 // ---------- renderer / scene ----------
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const pixelator = window.LoFi.createScenePixelator(THREE, renderer); // skin "lofi" — see lofi.js
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 300);
 
@@ -183,7 +194,7 @@ function makeLabel(text) {
   tex.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }));
   sprite.scale.set(2.4, 0.4, 1);
-  return sprite;
+  return window.LoFi.markText(sprite); // text stays sharp when the scene is pixelated
 }
 
 // small seeded generator (mulberry32): a hand-drawn shape has to come out
@@ -364,6 +375,7 @@ function drawCoverImage(ctx, img) {
   const scale = Math.max(box / img.width, box / img.height);
   const w = img.width * scale;
   const h = img.height * scale;
+  ctx.imageSmoothingEnabled = window.LoFi.smoothing(SKIN.lofi); // keep dither dots crisp
   ctx.drawImage(img, 64 - w / 2, 64 - h / 2, w, h);
 }
 
@@ -382,7 +394,9 @@ function makeImageCircleSprite(img, outlineColorStr, diameter) {
   ctx.lineWidth = 8;
   ctx.strokeStyle = outlineColorStr;
   ctx.stroke();
-  return canvasSprite(c, diameter);
+  const sprite = canvasSprite(c, diameter);
+  window.LoFi.crispTexture(THREE, sprite.material.map, SKIN.lofi);
+  return sprite;
 }
 
 // same, but both the clip shape and the border use the wobbly hand-drawn
@@ -396,7 +410,9 @@ function makeSketchImageCircleSprite(img, outlineColorStr, diameter, seed) {
   drawCoverImage(ctx, img);
   ctx.restore();
   strokeSketchCircle(ctx, outlineColorStr, 64, 64, 46, seed);
-  return canvasSprite(c, diameter);
+  const sprite = canvasSprite(c, diameter);
+  window.LoFi.crispTexture(THREE, sprite.material.map, SKIN.lofi);
+  return sprite;
 }
 
 function makeSolidOutlinedMesh(shape, color, outlineColorStr) {
@@ -428,8 +444,8 @@ function buildCore(d, shape, nodeR) {
   const seed = (d._i + 1) * 1.37;
   if (showImages && d.image && imageCache[d.image]) {
     return isSketch
-      ? makeSketchImageCircleSprite(imageCache[d.image], outlineColorStr, nodeR * 2.4, seed)
-      : makeImageCircleSprite(imageCache[d.image], outlineColorStr, nodeR * 2.2);
+      ? makeSketchImageCircleSprite(nodeImage(d), outlineColorStr, nodeR * 2.4, seed)
+      : makeImageCircleSprite(nodeImage(d), outlineColorStr, nodeR * 2.2);
   }
   if (SKIN.nodes.fill === "wireframe") {
     const geo = shape === "circle" ? wireCircleGeo : SHAPES[shape];
@@ -616,7 +632,7 @@ function setHovered(node) {
   tooltipTitle.textContent = d.title;
   tooltipDate.textContent = quadrantLabel(d);
   if (d.image) {
-    tooltipImage.style.backgroundImage = `url("${d.image}")`;
+    window.LoFi.showImage(tooltipImage, d.image, SKIN.lofi, 280, (u) => (tooltipImage.style.backgroundImage = `url("${u}")`));
     tooltipImage.hidden = false;
   } else {
     tooltipImage.hidden = true;
@@ -639,7 +655,7 @@ function selectNode(node) {
   selected = node;
   const d = node.data;
   if (d.image) {
-    panelImage.src = d.image;
+    window.LoFi.showImage(panelImage, d.image, SKIN.lofi, 280, (u) => (panelImage.src = u));
     panelImage.alt = d.title;
     panelImageWrap.hidden = false;
   } else {
@@ -734,7 +750,7 @@ function frame() {
   else setHovered(null);
   positionTooltip();
 
-  renderer.render(scene, camera);
+  pixelator.render(scene, camera, SKIN.lofi);
   requestAnimationFrame(frame);
 }
 
@@ -803,6 +819,7 @@ async function boot() {
     }
     if (skin) SKIN = mergeSkin(SKIN, skin);
     applySkinCSS();
+    window.LoFi.applyHeader(SKIN.lofi);
     showImages = !!SKIN.nodes.useImages;
     updateImageToggleButton();
     designerReady();
@@ -838,7 +855,7 @@ window.__designer = {
     kind: "3d",
     axes: 2,
     configKey: "skin",
-    capabilities: ["categoryColor", "sketch", "tilt", "quadrants"]
+    capabilities: ["categoryColor", "sketch", "tilt", "quadrants", "lofi"]
   },
   getSkin: () => SKIN,
   applySkin(partial) {
@@ -849,6 +866,7 @@ window.__designer = {
     const useImagesChanged = partial.nodes && partial.nodes.useImages !== SKIN.nodes.useImages;
     SKIN = mergeSkin(SKIN, partial);
     applySkinCSS();
+    window.LoFi.applyHeader(SKIN.lofi);
     if (useImagesChanged) showImages = !!SKIN.nodes.useImages;
     updateImageToggleButton();
     if (data.length) layout();

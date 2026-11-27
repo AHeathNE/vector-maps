@@ -93,8 +93,17 @@ let SKIN = {
   },
   // the rod normally seesaws and slides toward the cursor; a skin can turn
   // that off for a calmer, static line
-  motion: { tilt: true }
+  motion: { tilt: true },
+  // pixelate / dither — see lofi.js
+  lofi: window.LoFi.defaults()
 };
+
+// skin "lofi" (see lofi.js): the scene renders chunky with its text sharp
+// on top, and the photos in the nodes can be dithered
+function nodeImage(d) {
+  // the photo fills ~88/128 of a sprite that's ~2.4 node radii across
+  return window.LoFi.nodeImage(imageCache[d.image], (SKIN.nodes.pixelRadius * 2.4 * 88) / 128, SKIN.lofi);
+}
 
 function applySkinCSS() {
   const root = document.documentElement.style;
@@ -132,6 +141,7 @@ function outlineColorFor(d) {
 // ---------- renderer / scene ----------
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const pixelator = window.LoFi.createScenePixelator(THREE, renderer); // skin "lofi" — see lofi.js
 
 const scene = new THREE.Scene();
 
@@ -252,7 +262,7 @@ function makeLabel(text, major) {
   tex.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }));
   sprite.scale.set(1.6, 0.4, 1);
-  return sprite;
+  return window.LoFi.markText(sprite); // text stays sharp when the scene is pixelated
 }
 
 // ---------- ticks ----------
@@ -427,6 +437,7 @@ function makeImageCircleSprite(img, outlineColorStr, diameter) {
   const scale = Math.max(box / img.width, box / img.height);
   const w = img.width * scale;
   const h = img.height * scale;
+  ctx.imageSmoothingEnabled = window.LoFi.smoothing(SKIN.lofi); // keep dither dots crisp
   ctx.drawImage(img, 64 - w / 2, 64 - h / 2, w, h);
   ctx.restore();
   ctx.beginPath();
@@ -434,7 +445,7 @@ function makeImageCircleSprite(img, outlineColorStr, diameter) {
   ctx.lineWidth = 8;
   ctx.strokeStyle = outlineColorStr;
   ctx.stroke();
-  const tex = new THREE.CanvasTexture(c);
+  const tex = window.LoFi.crispTexture(THREE, new THREE.CanvasTexture(c), SKIN.lofi);
   tex.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }));
   sprite.scale.set(diameter, diameter, 1);
@@ -456,10 +467,11 @@ function makeSketchImageCircleSprite(img, outlineColorStr, diameter, seed) {
   const scale = Math.max(box / img.width, box / img.height);
   const w = img.width * scale;
   const h = img.height * scale;
+  ctx.imageSmoothingEnabled = window.LoFi.smoothing(SKIN.lofi); // keep dither dots crisp
   ctx.drawImage(img, 64 - w / 2, 64 - h / 2, w, h);
   ctx.restore();
   strokeSketchCircle(ctx, outlineColorStr, 64, 64, 46, seed);
-  const tex = new THREE.CanvasTexture(c);
+  const tex = window.LoFi.crispTexture(THREE, new THREE.CanvasTexture(c), SKIN.lofi);
   tex.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }));
   sprite.scale.set(diameter, diameter, 1);
@@ -494,8 +506,8 @@ function buildCore(d, shape, nodeR) {
   const isSketch = SKIN.nodes.fill === "sketch" || SKIN.nodes.fill === "sketch-fill";
   if (showImages && d.image && imageCache[d.image]) {
     return isSketch
-      ? makeSketchImageCircleSprite(imageCache[d.image], outlineColorStr, nodeR * 2.4, (d._i + 1) * 1.37)
-      : makeImageCircleSprite(imageCache[d.image], outlineColorStr, nodeR * 2.2);
+      ? makeSketchImageCircleSprite(nodeImage(d), outlineColorStr, nodeR * 2.4, (d._i + 1) * 1.37)
+      : makeImageCircleSprite(nodeImage(d), outlineColorStr, nodeR * 2.2);
   }
   if (SKIN.nodes.fill === "wireframe") {
     const geo = shape === "circle" ? wireCircleGeo : SHAPES[shape];
@@ -614,7 +626,7 @@ function setHovered(node) {
   tooltipTitle.textContent = d.title;
   tooltipDate.textContent = formatDate(d.date, scheme);
   if (d.image) {
-    tooltipImage.style.backgroundImage = `url("${d.image}")`;
+    window.LoFi.showImage(tooltipImage, d.image, SKIN.lofi, 280, (u) => (tooltipImage.style.backgroundImage = `url("${u}")`));
     tooltipImage.hidden = false;
   } else {
     tooltipImage.hidden = true;
@@ -637,7 +649,7 @@ function selectNode(node) {
   selected = node;
   const d = node.data;
   if (d.image) {
-    panelImage.src = d.image;
+    window.LoFi.showImage(panelImage, d.image, SKIN.lofi, 280, (u) => (panelImage.src = u));
     panelImage.alt = d.title;
     panelImageWrap.hidden = false;
   } else {
@@ -814,7 +826,7 @@ function frame() {
   else setHovered(null);
   positionTooltip();
 
-  renderer.render(scene, camera);
+  pixelator.render(scene, camera, SKIN.lofi);
   requestAnimationFrame(frame);
 }
 
@@ -901,10 +913,12 @@ async function boot() {
       lines: { ...SKIN.lines, ...skin.lines },
       labels: { ...SKIN.labels, ...skin.labels },
       nodes: { ...SKIN.nodes, ...skin.nodes },
-      motion: { ...SKIN.motion, ...skin.motion }
+      motion: { ...SKIN.motion, ...skin.motion },
+      lofi: { ...SKIN.lofi, ...skin.lofi }
     };
   }
   applySkinCSS();
+  window.LoFi.applyHeader(SKIN.lofi);
   showImages = !!SKIN.nodes.useImages;
   updateImageToggleButton();
   designerReady();
@@ -944,7 +958,7 @@ window.__designer = {
   ready: designerReadyPromise,
   // what the designer needs to know to build the right form: which kind
   // of skin this page takes and which optional features it can render
-  meta: { label: "Timeline", kind: "3d", axes: 1, configKey: "skin", capabilities: ["minorLabels", "categoryColor", "sketch", "tilt"] },
+  meta: { label: "Timeline", kind: "3d", axes: 1, configKey: "skin", capabilities: ["minorLabels", "categoryColor", "sketch", "tilt", "lofi"] },
   getSkin: () => SKIN,
   applySkin(partial) {
     const useImagesChanged = partial.nodes && partial.nodes.useImages !== SKIN.nodes.useImages;
@@ -953,9 +967,11 @@ window.__designer = {
       lines: { ...SKIN.lines, ...partial.lines },
       labels: { ...SKIN.labels, ...partial.labels },
       nodes: { ...SKIN.nodes, ...partial.nodes },
-      motion: { ...SKIN.motion, ...partial.motion }
+      motion: { ...SKIN.motion, ...partial.motion },
+      lofi: { ...SKIN.lofi, ...partial.lofi }
     };
     applySkinCSS();
+    window.LoFi.applyHeader(SKIN.lofi);
     if (useImagesChanged) showImages = !!SKIN.nodes.useImages;
     updateImageToggleButton();
     if (timeline) layout();

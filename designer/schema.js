@@ -22,6 +22,30 @@ export function colorModeOf(skin, caps) {
   return supported.includes(skin.nodes.colorMode) ? skin.nodes.colorMode : supported[0];
 }
 
+// pixelate / dither — the same controls on 2D and 3D pages (see lofi.js in a map)
+const LOFI_SECTION = {
+  title: "Lo-fi",
+  requires: "lofi",
+  note: "Crunch the map down to chunky pixels and dither the images. Text on the map stays sharp; the header only pixelates if you tick it. Pixel size 1 is off.",
+  fields: [
+    { type: "range", path: "lofi.pixelate", label: "Pixel size (px)", min: 1, max: 12, step: 1 },
+    { type: "checkbox", path: "lofi.crunchHeader", label: "Pixelate the header too (title and subtext)", when: (s) => s.lofi.pixelate > 1 },
+    { type: "checkbox", path: "lofi.dither", label: "Dither images" },
+    {
+      type: "select",
+      path: "lofi.ditherPalette",
+      label: "Dither colors",
+      when: (s) => s.lofi.dither,
+      options: [
+        { value: "bw", label: "Black & white" },
+        { value: "skin", label: "This skin's text on its background" }
+      ]
+    },
+    { type: "range", path: "lofi.ditherSize", label: "Dither dot size (px)", min: 1, max: 8, step: 1, when: (s) => s.lofi.dither }
+  ]
+};
+const LOFI_DEFAULTS = () => ({ pixelate: 1, crunchHeader: false, dither: false, ditherPalette: "bw", ditherSize: 2 });
+
 const SECTIONS_3D = [
   {
     title: "Page colors",
@@ -174,7 +198,8 @@ const SECTIONS_3D = [
     title: "Motion",
     requires: "tilt",
     fields: [{ type: "checkbox", path: "motion.tilt", label: "Tilt toward the cursor" }]
-  }
+  },
+  LOFI_SECTION
 ];
 
 const SECTIONS_2D = [
@@ -223,7 +248,8 @@ const SECTIONS_2D = [
       { type: "range", path: "nodes.size", label: "Dot size (px)", min: 6, max: 30, step: 1 },
       { type: "range", path: "nodes.thumbSize", label: "Thumbnail size (px)", min: 20, max: 80, step: 2 }
     ]
-  }
+  },
+  LOFI_SECTION
 ];
 
 export const SCHEMAS = {
@@ -269,7 +295,8 @@ export const SCHEMAS = {
         irreverentLow: "#fbbf24",
         reverentLow: "#34d399"
       },
-      motion: { tilt: true }
+      motion: { tilt: true },
+      lofi: LOFI_DEFAULTS()
     })
   },
   "2d": {
@@ -289,7 +316,8 @@ export const SCHEMAS = {
         quadrantReverentLow: "rgba(52, 211, 153, 0.06)"
       },
       lines: { thickness: 3 },
-      nodes: { size: 14, thumbSize: 40 }
+      nodes: { size: 14, thumbSize: 40 },
+      lofi: LOFI_DEFAULTS()
     })
   }
 };
